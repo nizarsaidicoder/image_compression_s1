@@ -1,0 +1,23 @@
+BouleMaxBruteForce( tableau distanceEucCarrée)
+listFinal = list à deux dimenssions vide
+listBouleMax = list à deux dimenssions vide
+on parcours tous les pixels du tableau avec une double boucle
+	listBoule = (x, y, tableau[x][y])		# liste de 3 éléments avec x et y comme coordonné du pixel et le 3eme élément est la distance minimale avec le fond le plus proche donc le rayon de la boule
+	listBouleMax.Append(listBoule)	# on remplis la liste de toutes les boules
+
+on compars toutes les listes de listBouleMax avec une double boucle:
+	si listBouleMax[i][2] > listBouleMax[j][2]
+		int rayonMax = listBouleMax[i][2]
+		int rayonMin = listBouleMax[j][2]
+		int plusGrand = i
+	sinon
+		int rayonMax = listBouleMax[j][2]
+		int rayonMin = listBouleMax[i][2]
+		int plusGrand = j
+
+	int distance = racine carrée( (listBouleMax[i][0] - listBouleMax[j][0])² + (listBouleMax[i][1] - listBouleMax[j][1])²)
+
+	si rayonMin + distance > rayonMax
+		listFinal.Append(listBouleMax[plusGrand])
+
+return listFinal
