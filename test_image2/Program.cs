@@ -935,7 +935,6 @@ namespace test_image2
             f.Width = img.Width;
             f.Height = img.Height;
             f.Show();
-
         }
     }
 }
