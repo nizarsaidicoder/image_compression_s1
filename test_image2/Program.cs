@@ -32,11 +32,18 @@ namespace test_image2
             Console.WriteLine($"Centre de la boule : ({X}, {Y})");
             Console.WriteLine($"Rayon de la boule : {Rayon}");
         }
-        // Verifier si elle est incluse dans une autre boule
+        /// <summary>
+        /// Vérifie si la boule est incluse dans une autre boule.
+        /// </summary>
+        /// <param name="Xboule">La boule à comparer.</param>
+        /// <returns>Retourne vrai si la boule est incluse, sinon faux.</returns>
         public bool EstIncluse(Boule Xboule)
         {
-            int distance = (int)( Math.Pow((X - Xboule.X), 2) + Math.Pow((Y - Xboule.Y), 2));
-            return distance + Rayon <= Xboule.Rayon ;
+            // Calcul de la distance entre les centres des deux boules
+            int distance = (int)(Math.Pow((X - Xboule.X), 2) + Math.Pow((Y - Xboule.Y), 2));
+
+            // Vérification de l'inclusion en comparant la somme des rayons avec la distance
+            return distance + Rayon <= Xboule.Rayon;
         }
     }
     class Program
@@ -49,25 +56,9 @@ namespace test_image2
             string imagePath = $"../../images/imagesReelles/yin.bmp";
             //Transforme l'image en tableau 2D
             int[,] tabImage = TabFromFile(imagePath);
-            /*int[,] tabImage = new int[,]
-            {
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 255, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 255, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 255, 0, 0, 0 },
-                { 0, 255, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 255, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 255, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-            };*/
-            //Ajoutez ici d'autres traitements ou analyse du tableau
             /************************************************************************************/
-
-
             // Cree un tableau à partir de tabImage normalisee en deux valeurs (0 et "infini")
             int[,] tabInit = InitResultat(tabImage);
-            
             /************************* METHODE BRUTE FORCE *************************/
             // Console.WriteLine("METHODE BRUTE FORCE");
             // int resultatBrute = CarteBruteForce(tabInit);
@@ -75,8 +66,7 @@ namespace test_image2
             // SaveImage(resultatBrute, "../../images/RESULTATS_BRUTE/resultatBrute.bmp");
             /**********************************************************************/
 
-
-            /************************* Methode optimisée *************************/
+            /************************* METHODE OPTIMISEE *************************/
             //Console.WriteLine("METHODE OPTIMISEE");
             int[,] resultatOptimise = CarteOptimise(tabInit);
 
@@ -88,27 +78,6 @@ namespace test_image2
             BoulesMaxToFile(BoulesMax, width, height, imagePath);
             Affiche_Squelette(tabImage,BoulesMax);
             SaveSquelette(tabImage,BoulesMax,$"../../images/image.bmp");
-            
-            /*
-            for (int i = 1; i < 21; i++)
-            {
-                for(int j = 0;j<5; j++)
-                {
-                    Console.WriteLine($"[{ i},{j}]");
-                    string path = $"../../images/imagesTheoriques/img{i}/image{j}.bmp";
-                    int[,] tabImage = TabFromFile(path);
-                    int[,] tabInit = InitResultat(tabImage);
-                    int[,] resultatOptimise = CarteOptimise(tabInit);
-                    List<Boule> BoulesMax = ExtraireBoulesMax(resultatOptimise);
-                    int width = tabImage.GetLength(0);
-                    int height = tabImage.GetLength(1);
-                    path = $"../../images/BOULES_MAX_DOT_RESULTATS_OPTIMISE/img{i}/image{j}.bmp";
-                    BoulesMaxToFile(BoulesMax, width, height, path);
-                    SaveSquelette(tabImage, BoulesMax,path );
-
-                }
-            }
-            */
             Console.ReadKey();
         }
 
@@ -222,55 +191,26 @@ namespace test_image2
             return tabResultats;
         }
 
-        /********************************************************************************************
-        *********************************************************************************************
-        ***************************     BOULES MAXIMALES DISCRETES      *****************************
-        *********************************************************************************************
-        *********************************************************************************************
-        ********************************************************************************************/
-
-        /**************************                             **************************************
-        ***************************     METHODE BRUTE FORCE     **************************************
-        ***************************                             **************************************/
-        ///<summary>
-        ///Extraire les boules maximales à partir d'un tableau 2D représentant une carte distance.
-        ///</summary>
-        ///<param name = "Xcarte" > La carte de distance (Tableau 2D).</param>
-        ///<returns>Une liste de boules maximales extraits de la carte.</returns>
-        public static List<Boule> ExtraireBoulesMax(int[,] Xcarte)
+        /// <summary>
+        /// Extraire les boules maximales à partir d'un tableau 2D représentant une carte distance.
+        /// </summary>
+        /// <param name="carteDistance">La carte de distance (Tableau 2D).</param>
+        /// <returns>Une liste de boules maximales extraites de la carte.</returns>
+        public static List<Boule> ExtraireBoulesMax(int[,] carteDistance)
         {
-            List<Boule> boules = new List<Boule>();
-            List<Boule> boulesMax = new List<Boule>();
-            int hauteur = Xcarte.GetLength(0);
-            int largeur = Xcarte.GetLength(1);
-            for(int i =0;i<hauteur;i++)
-            {
-                for(int j = 0 ;j<largeur;j++)
-                {
-                    if (Xcarte[i, j] != 0)
-                    {
-                        boules.Add(new Boule(i, j, Xcarte[i, j]));
-                    }
-                }
-            }
-            boules.Sort((a, b) => b.Rayon.CompareTo(a.Rayon));
-            
+            List<Boule> boules = CreerListeBoules(carteDistance);
+            TrierBoulesParRayonDecroissant(boules);
 
-            for (int i = 0 ; i < boules.Count ; i++)
-            {
-                Boule boule = boules[i];
-                bool estBouleMax = true;
-                int k = boulesMax.Count - 1;
-                while (k >= 0 && estBouleMax)
-                {
-                    Boule boule2 = boulesMax[k];
-                    estBouleMax = !boule.EstIncluse(boule2);
-                    k--;
-                }
-                if (estBouleMax) boulesMax.Add(boule);
-            }
-            return boulesMax;
-         }
+            return TrouverBoulesMaximales(boules);
+        }
+
+        /// <summary>
+        /// Écrit les informations sur une liste de Boules dans un fichier texte.
+        /// </summary>
+        /// <param name="Xboules">La liste de Boules à écrire dans le fichier.</param>
+        /// <param name="Xwidth">La largeur de l'image ou de la zone.</param>
+        /// <param name="Xheight">La hauteur de l'image ou de la zone.</param>
+        /// <param name="Xpath">Le chemin du fichier de sortie.</param>
         public static void BoulesMaxToFile(List<Boule> Xboules, int Xwidth, int Xheight, string Xpath)
         {
             string path = Xpath.Substring(0, Xpath.Length - 3);
@@ -657,7 +597,71 @@ namespace test_image2
             }
         }
 
+        /// <summary>
+        /// Crée une liste de boules à partir d'un tableau 2D représentant une carte distance.
+        /// </summary>
+        /// <param name="carteDistance">La carte de distance (Tableau 2D).</param>
+        /// <returns>Une liste de boules.</returns>
+        public static List<Boule> CreerListeBoules(int[,] carteDistance)
+        {
+            List<Boule> boules = new List<Boule>();
+            int hauteur = carteDistance.GetLength(0);
+            int largeur = carteDistance.GetLength(1);
 
+            for (int i = 0; i < hauteur; i++)
+            {
+                for (int j = 0; j < largeur; j++)
+                {
+                    if (carteDistance[i, j] != 0)
+                    {
+                        boules.Add(new Boule(i, j, carteDistance[i, j]));
+                    }
+                }
+            }
+
+            return boules;
+        }
+    /// <summary>
+    /// Trie une liste de boules par rayon de manière décroissante.
+    /// </summary>
+    /// <param name="boules">La liste de boules à trier.</param>
+        public static void TrierBoulesParRayonDecroissant(List<Boule> boules)
+        {
+            boules.Sort((a, b) => b.Rayon.CompareTo(a.Rayon));
+        }
+        /// <summary>
+        /// Trouve les boules maximales parmi une liste de boules.
+        /// </summary>
+        /// <param name="boules">La liste de boules à évaluer.</param>
+        /// <returns>Une liste de boules maximales.</returns>
+        public static List<Boule> TrouverBoulesMaximales(List<Boule> boules)
+        {
+            List<Boule> boulesMax = new List<Boule>();
+
+            foreach (Boule boule in boules)
+            {
+                if (EstBouleMaximale(boule, boulesMax))
+                {
+                    boulesMax.Add(boule);
+                }
+            }
+
+            return boulesMax;
+        }
+        /// <summary>
+        /// Vérifie si une boule est maximale parmi un ensemble de boules maximales existantes.
+        /// </summary>
+        /// <param name="boule">La boule à évaluer.</param>
+        /// <param name="boulesMax">La liste des boules maximales existantes.</param>
+        /// <returns>True si la boule est maximale, sinon False.</returns>
+        public static bool EstBouleMaximale(Boule boule, List<Boule> boulesMax)
+        {
+            foreach (Boule bouleMax in boulesMax)
+            {
+                if (boule.EstIncluse(bouleMax)) return false;
+            }
+            return true;
+        }
         /********************************************************************************************
         *********************************************************************************************
         ********************************     AFFICHAGE D'IMAGE     **********************************
@@ -766,7 +770,7 @@ namespace test_image2
 
 
         /// <summary>
-        /// Remplit Ximg à partir de Xtab.
+        /// Remplit une image par les boules maximales(CERCLES) à partir de Xtab.
         /// </summary>
         /// <param name="Xtab">Le tableau 2D stockant les valeurs des pixels de l'image Ximg.</param>
         /// <param name="Ximg">L'image Bitmap résultante</param>
@@ -783,24 +787,10 @@ namespace test_image2
                 {
                     for (int col = 0; col < largeur; col++)
                     {
-                        Color gradientColor = CalculateGradientColor(col, largeur);
-
                         int valeurPixel = Xtab[lig, col];
-                        Color pixelColor = Color.FromArgb(255, valeurPixel, valeurPixel, valeurPixel);
-                        Color finalColor;
-                        
-                        // Blend the gradient color with the pixel color
-                        if(valeurPixel == 255)
-                        {
-                            finalColor = Color.FromArgb(0, 0,0,0);
-                        }
-                        else
-                        {
-                            finalColor = Color.FromArgb(255, valeurPixel, valeurPixel, valeurPixel);
-                            //finalColor = BlendColors(pixelColor, gradientColor);
-                        }
-                        
-
+                        Color finalColor;               
+                        if(valeurPixel == 255) finalColor = Color.FromArgb(0, 0,0,0);
+                        else finalColor = Color.FromArgb(255, valeurPixel, valeurPixel, valeurPixel);
                         Ximg.SetPixel(col, lig, finalColor);
                     }
                 }
@@ -809,40 +799,40 @@ namespace test_image2
                 {
                     
                     int rayon = (int) Math.Round(Math.Sqrt(boule.Rayon));
-                   // DrawCircle(g, boule.Y, boule.X, rayon, Color.FromArgb(255,255,255,255));
-                    
-                    //int rayon = (int)Math.Round(Math.Sqrt(boule.Rayon));
-
-                    // Calculate the gradient color for the circle based on its position
                     Color circleGradientColor = CalculateGradientColor(boule.X, largeur);
-
-                    // Draw the circle with the gradient color
+                    // Dessin des cercles représentant les boules maximales
                     DrawCircle(g, boule.Y, boule.X, rayon, circleGradientColor);
                 }
             }
         }
-
-        private static Color CalculateGradientColor(int col, int width)
+        /// <summary>
+        /// Calcule une couleur de dégradé en fonction de la colonne actuelle.
+        /// </summary>
+        /// <param name="col">La colonne actuelle.</param>
+        /// <param name="width">La largeur de l'image.</param>
+        /// <returns>La couleur calculée.</returns>
+        public static Color CalculateGradientColor(int col, int width)
         {
-            // Define the gradient colors
             Color color1 = Color.FromArgb(0x00DBDE);
             Color color2 = Color.FromArgb(0x635EE2);
             Color color3 = Color.FromArgb(0x9564D2);
 
-            // Calculate the interpolation factor
             float t = (float)col / (float)width;
 
-            // Interpolate between color1 and color2, and then between color2 and color3
             Color interpolatedColor1 = InterpolateColors(color1, color2, t);
             Color interpolatedColor2 = InterpolateColors(color2, color3, t);
 
-            // Interpolate between the two intermediate colors to get the final gradient color
             return InterpolateColors(interpolatedColor1, interpolatedColor2, t);
         }
-
-        private static Color InterpolateColors(Color color1, Color color2, float t)
+        /// <summary>
+        /// Interpole entre deux couleurs en fonction d'un facteur t.
+        /// </summary>
+        /// <param name="color1">La première couleur.</param>
+        /// <param name="color2">La deuxième couleur.</param>
+        /// <param name="t">Le facteur d'interpolation.</param>
+        /// <returns>La couleur interpolée.</returns>
+        public static Color InterpolateColors(Color color1, Color color2, float t)
         {
-            // Perform linear interpolation between two colors
             int r = (int)(color1.R + t * (color2.R - color1.R));
             int g = (int)(color1.G + t * (color2.G - color1.G));
             int b = (int)(color1.B + t * (color2.B - color1.B));
@@ -850,36 +840,46 @@ namespace test_image2
             return Color.FromArgb(r, g, b);
         }
 
-        private static Color BlendColors(Color baseColor, Color blendColor)
+        /// <summary>
+        /// Mélange deux couleurs.
+        /// </summary>
+        /// <param name="baseColor">La couleur de base.</param>
+        /// <param name="blendColor">La couleur à mélanger.</param>
+        /// <returns>La couleur résultante.</returns>
+        public static Color BlendColors(Color baseColor, Color blendColor)
         {
-            // Blend the base color with the blend color
             int alpha = blendColor.A;
             int invAlpha = 255 - alpha;
-
             int r = (baseColor.R * invAlpha + blendColor.R * alpha) / 255;
             int g = (baseColor.G * invAlpha + blendColor.G * alpha) / 255;
             int b = (baseColor.B * invAlpha + blendColor.B * alpha) / 255;
-
             return Color.FromArgb(255, r, g, b);
         }
 
-        // Function to draw an unfilled circle
+        /// <summary>
+        /// Dessine un cercle sur le graphique g aux coordonnées spécifiées.
+        /// </summary>
+        /// <param name="g">Le graphique sur lequel dessiner.</param>
+        /// <param name="centerX">La coordonnée X du centre du cercle.</param>
+        /// <param name="centerY">La coordonnée Y du centre du cercle.</param>
+        /// <param name="radius">Le rayon du cercle.</param>
+        /// <param name="color">La couleur du cercle.</param>
         public static void DrawCircle(Graphics g, int centerX, int centerY, int radius, Color color)
-    {
-        using (Pen pen = new Pen(color))
         {
-            g.DrawEllipse(pen, centerX - radius, centerY - radius, 2 * radius, 2 * radius);
+            using (Pen pen = new Pen(color))
+            {
+                g.DrawEllipse(pen, centerX - radius, centerY - radius, 2 * radius, 2 * radius);
+            }
         }
-    }
         
         /// <summary>
-        /// Remplit Ximg à partir de Xtab.
+        /// Remplit l'image avec le squelette avec des points à partir de Xtab.
         /// </summary>
         /// <param name="Xtab">Le tableau 2D stockant les valeurs des pixels de l'image Ximg.</param>
         /// <param name="Ximg">L'image Bitmap résultante</param>
         ///
         /*
-        public static void IntToSquelette(int[,] Xtab, List<Boule> XboulesMax, Bitmap Ximg)
+        public static void IntToSquelettePoint(int[,] Xtab, List<Boule> XboulesMax, Bitmap Ximg)
         {
             int hauteur = Xtab.GetLength(0);
             int largeur = Xtab.GetLength(1);
