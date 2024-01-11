@@ -63,131 +63,70 @@ namespace test_image2
     {
         static void Main(string[] args)
         {
-            /*********************************** INITIALISTION ***********************************/
-            // Spécifie le chemin d'accès à votre image BMP
-
-            string imagePath = $"../../images/imagesReelles/lotus.txt";
-            //Transforme l'image en tableau 2D
-            //int[,] tabImage = TabFromFile(imagePath);
             /*
-            int[,] tabImage = {
-                {0, 255, 0, 255, 55, 255, 0,55},
-                {0, 255, 0, 55, 255, 255, 0, 255},
-                {0, 55, 0, 255, 4, 255, 0, 2},
-                {4, 255, 0, 255, 4, 255, 0, 255},
-                {0, 55, 0, 255, 0, 255, 0, 255},
-                {0, 255, 0, 255, 255, 255, 0, 255},
-                {0, 255, 0, 255, 255, 255, 0, 255},
-                    {0, 255, 0, 255, 255, 255, 0, 255},
-                {0, 255, 0, 255, 255, 5, 0, 255},
-                {0, 255, 0, 255, 255, 255, 0, 255},
-                {0, 25, 0, 255, 255, 255, 0, 255},
-                {0, 25, 0, 25, 255, 255, 0, 255},
-                {0, 255, 0, 255, 255, 255, 0, 255},
-                {0, 25, 0, 255, 255, 255, 0, 255},
-                {0, 255, 0, 25, 255, 255, 0, 255},
-                {0, 255, 0, 55, 255, 255, 0, 255},
-                {0, 255, 0, 255, 255, 255, 0, 255},
-                {0, 255, 0, 255, 255, 255, 0, 205},
-                {0, 255, 0, 255, 55, 255, 0, 255},
-            };
+            string Path = $"../../images/imagesReelles/";
+            string BallPath = $"../../images/BOULES_MAX_RESULTATS_OPTIMISE/";
+            string CartePath = $"../../images/CARTE_EUCLIDIENNE_RESULTATS_OPTIMISE/";
+            for (int i = 0; i < 20; i++) 
+            {
+                string imagePath =$"{Path}{i}.bmp";
+                int[,] tabImage = TabFromFile(imagePath);
+                int[,] tabInit = InitResultat(tabImage);
+                int[,] resultatOptimise = CarteOptimise(tabInit);
+                SaveImage(resultatOptimise, $"{CartePath}{i}.bmp");
+                List<Boule> BoulesMax = ExtraireBoulesMax(resultatOptimise);
+                int width = tabImage.GetLength(0);
+                int height = tabImage.GetLength(1);
+                BoulesMaxToFile(BoulesMax, width, height, $"{BallPath}{i}.bmp");
+                SaveSquelette(tabImage, BoulesMax, $"{BallPath}{i}.bmp");
+
+
+
+            }
             */
 
-            //MesurerTempsCalculCarteDistanceOptiBruit();
-            //WatchBouleMaxNoisePerformance(ExtraireBoulesMax, "Optimise");
-            //WatchSEDTFormePixelPerformance(CarteOptimise, "Optimise");
-            /************************************************************************************/
-            // Cree un tableau à partir de tabImage normalisee en deux valeurs (0 et "infini")
-            //int[,] tabInit = InitResultat(tabImage);
-            /************************* METHODE BRUTE FORCE *************************/
-            // Console.WriteLine("METHODE BRUTE FORCE");
+            /********************CARTE DISTANCE ***************************/
+            /************************* METHODE OPTIMISEE *************************/
+            // Console.WriteLine("METHODE oPTIMISE");
             // int resultatBrute = CarteBruteForce(tabInit);
             // Affiche_image(resultatBrute);
             // SaveImage(resultatBrute, "../../images/RESULTATS_BRUTE/resultatBrute.bmp");
             /**********************************************************************/
 
-            /************************* METHODE OPTIMISEE *************************/
-            //Console.WriteLine("METHODE OPTIMISEE");
-            //int[,] resultatOptimise = CarteOptimise(tabInit);
 
             /************************* Boules Maximales *************************/
-
+            /************************* METHODE OPTIMISEE *************************/
+            //string imagePath = $"../../images/imagesReelles/";
+            //int[,] tabImage = TabFromFile(imagePath);
+            //int[,] tabInit = InitResultat(tabImage);
+            //int[,] resultatOptimise = CarteOptimise(tabInit);
+            //int width = tabImage.GetLength(0);
+            //int height = tabImage.GetLength(1);
             //List<Boule> BoulesMax = ExtraireBoulesMax(resultatOptimise);
-            /*
-            List<Boule> BoulesMax = TrouverBoulesMax(resultatOptimise);
-            //CompareListesBoules(BoulesMax, BoulesMaxBrute);
-             
-            int width = tabImage.GetLength(0);
-            int height = tabImage.GetLength(1);
-            BoulesMaxToFile(BoulesMax, width, height, imagePath);
-            Affiche_Squelette(tabImage,BoulesMax);
-            SaveSquelette(tabImage,BoulesMax,$"../../images/image.bmp");
-            */
-            Reconstruction(imagePath);
-            ComparerImagesPourcentage("../../images/image.bmp", "../../images/imagesReelles/lotus.bmp");
+            //BoulesMaxToFile(BoulesMax, width, height, imagePath);
+
+            /************************* Reconstruction *************************/
+            //Reconstruction(TextPath);
+            /*****************************************************************/
+
+            /************************* GRAPHES *********************/
+            //WatchSEDTFormePixelPerformance(CarteOptimise, "Optimise");
+            //WatchSEDTFormePixelPerformance(CarteBruteForce, "Brute Force");
+            //WatchSEDTNoisePerformance(CarteBruteForce, "Brute Force");
+            //WatchSEDTNoisePerformance(CarteOptimise, "Optimise");
+            //WatchBouleMaxFormePixelPerformance(ExtraireBoulesMax, "Optimise");
+            //WatchBouleMaxNoisePerformance(ExtraireBoulesMax, "Optimise");
+            //WatchBouleMaxFormePixelPerformance(ExtraireBoulesMaxBrute, "Brute Force");
+            //WatchBouleMaxNoisePerformance(ExtraireBoulesMaxBrute, "Brute Force");
+            //WatchBouleMaxTotalPixelPerformance(ExtraireBoulesMax, "Optimise");
+            //WatchBouleMaxTotalPixelPerformance(ExtraireBoulesMaxBrute, "Brute Force");
+            //WatchBouleMaxNoisePerformance(ExtraireBoulesMax, "Optimise");
+            //WatchReconstructionBruitPerformance();
             Console.ReadKey(); 
         }
-        static bool CompareListesBoules(List<Boule> liste1, List<Boule> liste2)
-        {
-            // Si elles n'ont pas la meme longueur c'est qu'elles sont différentes
-            if (liste1.Count != liste2.Count)
-            {
-                Console.WriteLine("nb boule dans l'optimisé: " + liste1.Count);
-                Console.WriteLine("nb boule dans la brute force: " + liste2.Count);
-                return false;
-            }
-
-            // On vérifie chaque boule dans les deux listes
-            for (int i = 0; i < liste1.Count; i++)
-            {
-                // On compare les Rayon de deux boules
-                if (liste1[i].Rayon != liste2[i].Rayon)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        public static List<Boule> TrouverBoulesMax(int[,] distanceEucCarre)
-        {
-            List<Boule> boules = new List<Boule>();
-
-            for (int x1 = 0; x1 < distanceEucCarre.GetLength(0); x1++)
-            {
-                for (int y1 = 0; y1 < distanceEucCarre.GetLength(1); y1++)
-                {
-                    bool estMax = true;
-                    int rayon = distanceEucCarre[x1, y1];
-                    if (rayon > 0)
-                    {
-                        for (int x2 = 0; x2 < distanceEucCarre.GetLength(0) && estMax; x2++)
-                        {
-                            for (int y2 = 0; y2 < distanceEucCarre.GetLength(1) && estMax; y2++)
-                            {
-                                int rayon2 = distanceEucCarre[x2, y2];
-                                if ((x1 != x2 || y1 != y2) && rayon2 > 0)
-                                {
-                                    int distance = (int)(Math.Pow((x1 - x2), 2) + Math.Pow((y1 - y2), 2));
-
-                                    // Si la boule x1 y1 est incluse dans x2 y2, elle n'est pas maximale
-                                    if (rayon + distance <= rayon2)
-                                    {
-                                        estMax = false;
-                                    }
-                                }
-
-                            }
-                        }
-                        if (estMax)
-                        {
-                            boules.Add(new Boule(x1, y1, distanceEucCarre[x1, y1]));
-                        }
-                    }
-                }
-            }
-            TrierBoulesParRayonDecroissant(boules);
-            return boules;
-        }
+        
+        
+        
         /********************************************************************************************
         *********************************************************************************************
         **************************     CARTE DE DISTANCE EUCLIDIENNE      ***************************
@@ -300,87 +239,59 @@ namespace test_image2
 
         /********************************************************************************************
        *********************************************************************************************
-       **********************************     RECONSTRUCTION     ***********************************
+       **********************************     BOULES MAXIMALES     ***********************************
        *********************************************************************************************
        *********************************************************************************************
        ********************************************************************************************/
 
-        public static void Reconstruction(string TextPath)
+        
+        
+
+        /// <summary>
+        /// Extraire les boules maximales à partir d'un tableau 2D représentant une carte distance.
+        /// </summary>
+        /// <param name="distanceEucCarre">La carte de distance (Tableau 2D).</param>
+        /// <returns>Une liste de boules maximales extraites de la carte.</returns>
+        public static List<Boule> ExtraireBoulesMaxBrute(int[,] distanceEucCarre)
         {
+            List<Boule> boules = new List<Boule>();
 
-            // Read all lines from the file
-            string[] lines = File.ReadAllLines(TextPath);
-
-            // Parse the first line to get width and height
-            string[] dimensions = lines[0].Split(',');
-            int width = int.Parse(dimensions[0].Trim());
-            int height = int.Parse(dimensions[1].Trim());
-            Console.WriteLine($"{width},{height}");
-            // Create a new Bitmap image with the specified width and height
-            Bitmap bitmap = new Bitmap(width, height);
-            int[,] tab = new int[width, height];
-            // Create a list to store Boule structures
-            List<Boule> BoulesMax = new List<Boule>();
-
-            // Process the other arrays and create Boule structures
-            for (int i = 1; i < lines.Length; i++)
+            for (int x1 = 0; x1 < distanceEucCarre.GetLength(0); x1++)
             {
-                // Remove brackets from each line
-                string lineWithoutBrackets = lines[i].Replace("[", "").Replace("]", "");
-
-                string[] values = lineWithoutBrackets.Split(',');
-
-                // Assuming the array has three elements (X, Y, and Rayon)
-                int x = int.Parse(values[0].Trim());
-                int y = int.Parse(values[1].Trim());
-                int rayon = int.Parse(values[2].Trim());
-
-                // Create a new Boule structure and add it to the list
-                Boule boule = new Boule(x, y, rayon);
-                BoulesMax.Add(boule);
-            }
-            Affiche_Squelette(tab, BoulesMax);
-            SaveSquelette(tab,BoulesMax, "../../images/image.bmp");
-            /*
-            using (Graphics g = Graphics.FromImage(bitmap))
-            {
-                g.DrawImage(bitmap, 0, 0);
-                
-                for (int lig = 0; lig < height; lig++)
+                for (int y1 = 0; y1 < distanceEucCarre.GetLength(1); y1++)
                 {
-                    for (int col = 0; col < width; col++)
+                    bool estMax = true;
+                    int rayon = distanceEucCarre[x1, y1];
+                    if (rayon > 0)
                     {
-                        int valeurPixel = Xtab[lig, col];
-                        Color finalColor = Color.FromArgb(255, 255, 255, 255); ;
-                        // if (valeurPixel == 255) finalColor = Color.FromArgb(0, 0, 0, 0);
-                        //else finalColor = Color.FromArgb(255, valeurPixel, valeurPixel, valeurPixel);
-                        Ximg.SetPixel(col, lig, finalColor);
+                        for (int x2 = 0; x2 < distanceEucCarre.GetLength(0) && estMax; x2++)
+                        {
+                            for (int y2 = 0; y2 < distanceEucCarre.GetLength(1) && estMax; y2++)
+                            {
+                                int rayon2 = distanceEucCarre[x2, y2];
+                                if ((x1 != x2 || y1 != y2) && rayon2 > 0)
+                                {
+                                    int distance = (int)(Math.Pow((x1 - x2), 2) + Math.Pow((y1 - y2), 2));
+
+                                    // Si la boule x1 y1 est incluse dans x2 y2, elle n'est pas maximale
+                                    if (rayon + distance <= rayon2)
+                                    {
+                                        estMax = false;
+                                    }
+                                }
+
+                            }
+                        }
+                        if (estMax)
+                        {
+                            boules.Add(new Boule(x1, y1, distanceEucCarre[x1, y1]));
+                        }
                     }
                 }
-                
-                foreach (Boule boule in BoulesMax)
-                {
-
-                    int rayon = (int)Math.Round(Math.Sqrt(boule.Rayon));
-                    Color circleGradientColor = CalculateGradientColor(boule.X, width);
-                    // Dessin des cercles représentant les boules maximales
-                    //DrawCircle(g, boule.Y, boule.X, rayon, circleGradientColor);
-
-                    SolidBrush blackBrush = new SolidBrush(Color.Black);
-
-                    g.FillEllipse(blackBrush, boule.Y - rayon, boule.X - rayon, 2 * rayon, 2 * rayon);
-
-                    // Make sure to dispose of the brush to free up resources
-                    blackBrush.Dispose();
-                }
-                Form f = new Form();
-                f.BackgroundImage = bitmap;
-                f.Width = bitmap.Width;
-                f.Height = bitmap.Height;
-                f.Show();
             }
-        */
+            return boules;
         }
+
         /// <summary>
         /// Extraire les boules maximales à partir d'un tableau 2D représentant une carte distance.
         /// </summary>
@@ -422,8 +333,41 @@ namespace test_image2
                     writer.Write(resultat);
                 }
             }
-            //FileStream output = new FileStream("../../images/imagesReelles/malenia.bmp")
         }
+
+    /********************************************************************************************
+   *********************************************************************************************
+   **********************************     RECONSTRUCTION     ***********************************
+   *********************************************************************************************
+   *********************************************************************************************
+   ********************************************************************************************/
+    public static void Reconstruction(string TextPath)
+    {
+
+        string[] lines = File.ReadAllLines(TextPath);
+        string[] dimensions = lines[0].Split(',');
+        int width = int.Parse(dimensions[0].Trim());
+        int height = int.Parse(dimensions[1].Trim());
+        Console.WriteLine($"{width},{height}");
+        Bitmap bitmap = new Bitmap(width, height);
+        int[,] tab = new int[width, height];
+        List<Boule> BoulesMax = new List<Boule>();
+        for (int i = 1; i < lines.Length; i++)
+        {
+            string lineWithoutBrackets = lines[i].Replace("[", "").Replace("]", "");
+
+            string[] values = lineWithoutBrackets.Split(',');
+
+            int x = int.Parse(values[0].Trim());
+            int y = int.Parse(values[1].Trim());
+            int rayon = int.Parse(values[2].Trim());
+
+            Boule boule = new Boule(x, y, rayon);
+            BoulesMax.Add(boule);
+        }
+        //AfficheBouleImage(tab, BoulesMax);
+        SaveBouleImage(tab, BoulesMax, "../../images/ime.bmp");
+    }
 
         /********************************************************************************************
         *********************************************************************************************
@@ -431,6 +375,27 @@ namespace test_image2
         *********************************************************************************************
         *********************************************************************************************
         ********************************************************************************************/
+        static bool CompareListesBoules(List<Boule> liste1, List<Boule> liste2)
+        {
+            // Si elles n'ont pas la meme longueur c'est qu'elles sont différentes
+            if (liste1.Count != liste2.Count)
+            {
+                Console.WriteLine("nb boule dans l'optimisé: " + liste1.Count);
+                Console.WriteLine("nb boule dans la brute force: " + liste2.Count);
+                return false;
+            }
+
+            // On vérifie chaque boule dans les deux listes
+            for (int i = 0; i < liste1.Count; i++)
+            {
+                // On compare les Rayon de deux boules
+                if (liste1[i].Rayon != liste2[i].Rayon)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         static double ComparerImagesPourcentage(string cheminImageOriginale, string cheminImageReconstruite)
         {
@@ -492,37 +457,24 @@ namespace test_image2
             }
             return nbPixelForme;
         }
-        public static int GetFondPixels(int[,] XTab)
-        {
-            int hauteur = XTab.GetLength(0);
-            int largeur = XTab.GetLength(1);
 
-            int nbPixelFond = 0;
-            for (int lig = 0; lig < hauteur; lig++)
-            {
-                for (int col = 0; col < largeur; col++)
-                {
-                    if (XTab[lig, col] == 0) nbPixelFond++;
-                }
-            }
-            return nbPixelFond;
-        }
+
+        /// <summary>
+        /// Trie les images en fonction de leurs nombre de pixel de la forme.
+        /// </summary>
+        /// <param name="Xtab">le chemin de l'image</param>
         static int TrieCheminImagePixelForme(string imagePath)
         {
             int[,] tabImage = TabFromFile(imagePath);
             int[,] tabInit = InitResultat(tabImage);
+
             int nbPixelForme = GetFormPixels(tabInit);
             return nbPixelForme;
         }
-        static int TrieCheminImagePixelFond(string imagePath)
-        {
-            int[,] tabImage = TabFromFile(imagePath);
-            int[,] tabInit = InitResultat(tabImage);
-            int nbPixelFond = GetFondPixels(tabInit);
-
-            return nbPixelFond;
-        }
-
+        /// <summary>
+        /// Trie les images en fonction de leurs nombre total des pixels
+        /// </summary>
+        /// <param name="Xtab">le chemin de l'image</param>
         static int TrieCheminImagePixelTotal(string imagePath)
         {
             int[,] tabImage = TabFromFile(imagePath); 
@@ -1062,7 +1014,7 @@ namespace test_image2
         /// <param name="Xtab">Le tableau 2D stockant les valeurs des pixels de l'image Ximg.</param>
         /// <param name="Ximg">L'image Bitmap résultante</param>
 
-        public static void IntToSquelette(int[,] Xtab, List<Boule> XboulesMax, Bitmap Ximg)
+        public static void IntToCercle(int[,] Xtab, List<Boule> XboulesMax, Bitmap Ximg)
         {
             int hauteur = Xtab.GetLength(0);
             int largeur = Xtab.GetLength(1);
@@ -1070,31 +1022,38 @@ namespace test_image2
             {
                 g.DrawImage(Ximg, 0, 0);
 
-                for (int lig = 0; lig < hauteur; lig++)
-                {
-                    for (int col = 0; col < largeur; col++)
-                    {
-                        int valeurPixel = Xtab[lig, col];
-                        Color finalColor = Color.FromArgb(255, 255, 255, 255); ;
-                       // if (valeurPixel == 255) finalColor = Color.FromArgb(0, 0, 0, 0);
-                        //else finalColor = Color.FromArgb(255, valeurPixel, valeurPixel, valeurPixel);
-                        Ximg.SetPixel(col, lig, finalColor);
-                    }
-                }
-
                 foreach (Boule boule in XboulesMax)
                 {
 
                     int rayon = (int)Math.Round(Math.Sqrt(boule.Rayon));
-                    Color circleGradientColor = CalculateGradientColor(boule.X, largeur);
-                    // Dessin des cercles représentant les boules maximales
-                    //DrawCircle(g, boule.Y, boule.X, rayon, circleGradientColor);
-
                     SolidBrush blackBrush = new SolidBrush(Color.Black);
-
                     g.FillEllipse(blackBrush, boule.Y - rayon, boule.X - rayon, 2 * rayon, 2 * rayon);
+                    blackBrush.Dispose();
+                    Color circleGradientColor = CalculateGradientColor(boule.X, largeur);
+                    DrawCircle(g, boule.Y, boule.X, rayon, circleGradientColor);
 
-                    // Make sure to dispose of the brush to free up resources
+                    
+                }
+            }
+        }
+        /// <summary>
+        /// Reconstruit une image à partir des boules maximales
+        /// </summary>
+        /// <param name="Xtab">Le tableau 2D stockant les valeurs des pixels de l'image Ximg.</param>
+        /// <param name="Ximg">L'image Bitmap résultante</param>
+        public static void BouleToImage(int[,] Xtab, List<Boule> XboulesMax, Bitmap Ximg)
+        {
+            int hauteur = Xtab.GetLength(0);
+            int largeur = Xtab.GetLength(1);
+            using (Graphics g = Graphics.FromImage(Ximg))
+            {
+                g.DrawImage(Ximg, 0, 0);
+
+                foreach (Boule boule in XboulesMax)
+                {
+                    int rayon = (int)Math.Round(Math.Sqrt(boule.Rayon));
+                    SolidBrush blackBrush = new SolidBrush(Color.Black);
+                    g.FillEllipse(blackBrush, boule.Y - rayon, boule.X - rayon, 2 * rayon, 2 * rayon);
                     blackBrush.Dispose();
                 }
             }
@@ -1191,7 +1150,6 @@ namespace test_image2
                     else
                     {
                         c = Color.FromArgb(255, valeurPixel, valeurPixel, valeurPixel);
-                        //finalColor = BlendColors(pixelColor, gradientColor);
                     }
                     Ximg.SetPixel(col, lig, c);
                 }
@@ -1211,7 +1169,7 @@ namespace test_image2
         public static void SaveSquelette(int[,] Xtab, List<Boule> XboulesMax, string Xfile)
         {
             Bitmap img = new Bitmap(Xtab.GetLength(1), Xtab.GetLength(0));
-            IntToSquelette(Xtab, XboulesMax, img);
+            IntToCercle(Xtab, XboulesMax, img);
             img.Save(Xfile);
             Console.WriteLine("Saugarde dans le fichier : " + Xfile);
         }
@@ -1223,7 +1181,35 @@ namespace test_image2
         public static void Affiche_Squelette(int[,] Xtab, List<Boule> XboulesMax)
         {
             Bitmap img = new Bitmap(Xtab.GetLength(1), Xtab.GetLength(0));
-            IntToSquelette(Xtab, XboulesMax, img);
+            IntToCercle(Xtab, XboulesMax, img);
+            Form f = new Form();
+            f.BackgroundImage = img;
+            f.Width = img.Width;
+            f.Height = img.Height;
+            f.Show();
+        }
+
+        /// <summary>
+        /// Sauvegarde l'image dont la valeur des pixels est stockée dans Xtab, au chemin spécifié par Xfile.
+        /// </summary>
+        /// <param name="Xfile">Le chemin de l'image au format Bitmap.</param>
+        /// <param name="Xtab">Le tableau 2D stockant les valeurs des pixels de l'image à sauvegarder.</param>
+        public static void SaveBouleImage(int[,] Xtab, List<Boule> XboulesMax, string Xfile)
+        {
+            Bitmap img = new Bitmap(Xtab.GetLength(1), Xtab.GetLength(0));
+            BouleToImage(Xtab, XboulesMax, img);
+            img.Save(Xfile);
+            Console.WriteLine("Saugarde dans le fichier : " + Xfile);
+        }
+
+        /// <summary>
+        /// Affiche l'image dont la valeur des pixels est stockée dans Xtab.
+        /// </summary>
+        /// <param name="Xtab">Le tableau 2D stockant les valeurs des pixels de l'image à afficher.</param>
+        public static void AfficheBouleImage(int[,] Xtab, List<Boule> XboulesMax)
+        {
+            Bitmap img = new Bitmap(Xtab.GetLength(1), Xtab.GetLength(0));
+            BouleToImage(Xtab, XboulesMax, img);
             Form f = new Form();
             f.BackgroundImage = img;
             f.Width = img.Width;
@@ -1238,9 +1224,10 @@ namespace test_image2
         *********************************************************************************************
         ********************************************************************************************/
         /// <summary>
-        /// Mesure le temps de calcul
+        /// Mesure le temps de calcul de la carte de distance en fonction du bruit.
         /// </summary>
-
+        /// <param name="Algortihm">L'algorithme utilisé pour le calcul de la carte de distance.</param>
+        /// <param name="AlgoType">Le type d'algorithme utilisé, pour l'inclusion dans le graphique.</param>
         public static void WatchSEDTNoisePerformance(Func<int[,], int[,]> Algortihm, string AlgoType)
         {
             string[] imagePaths = {
@@ -1250,8 +1237,6 @@ namespace test_image2
                 "../../images/imagesTheoriques/img1/image3.bmp",
                 "../../images/imagesTheoriques/img1/image4.bmp"
             };
-            for (int j = 2; j < 4; j++)
-            {
                 Chart chart = new Chart();
                 chart.Titles.Add(new Title("Temps de calcul en fonction de bruit"));
                 chart.ChartAreas.Add(new ChartArea("Temps de calcul en fonction de bruit"));
@@ -1261,7 +1246,6 @@ namespace test_image2
                 series.ChartType = SeriesChartType.Line;
                 int index = 0;
                 chart.ChartAreas[0].AxisX.IsMarginVisible = false;
-
 
                 foreach (string imagePath in imagePaths)
                 {
@@ -1292,22 +1276,23 @@ namespace test_image2
                 ChartControl chartControl = new ChartControl(chart);
                 chartControl.Dock = DockStyle.Fill;
                 form.Controls.Add(chartControl);
-                //form.ShowDialog();
-                string pathToSave = $"../../images/GraphBruitSEDT{j}.png";
+                string pathToSave = $"../../images/CARTE_DISTANCE_GRAPHS/GraphBruitSEDT{AlgoType}.png";
                 chart.SaveImage(pathToSave, ChartImageFormat.Png);
-                for (int i = 0; i < 5; i++)
-                {
-                    imagePaths[i] = imagePaths[i].Replace("img1", $"img{j}");
-                }
-            }
+           
         }
+
+        /// <summary>
+        /// Mesure le temps de calcul de la carte de distance en fonction de nombre des pixels de la formes.
+        /// </summary>
+        /// <param name="Algortihm">L'algorithme utilisé pour le calcul de la carte de distance.</param>
+        /// <param name="AlgoType">Le type d'algorithme utilisé, pour l'inclusion dans le graphique.</param>
         public static void WatchSEDTFormePixelPerformance(Func<int[,], int[,]> Algortihm, string AlgoType)
         {
             List<string> images = new List<string>();
-            for (int i = 1; i < 20; i++)
+            for (int i = 0; i < 9; i++)
             {
-                string x = "../../images/imagesTheoriques/img1/image0.bmp";
-                x = x.Replace("img1", $"img{i}");
+                string x = "../../images/imagesReelles/Compare/";
+                x += i + ".bmp";
                 images.Add(x);
             }
             var imagePaths = images.OrderBy(TrieCheminImagePixelTotal);
@@ -1316,8 +1301,8 @@ namespace test_image2
                 Console.WriteLine(i);
             }
             Chart chart = new Chart();
-            chart.Titles.Add(new Title("Temps de calcul en fonction de nombre de pixel de la forme"));
-            chart.ChartAreas.Add(new ChartArea("Temps de calcul en fonction de nombre de pixel de la forme"));
+            chart.Titles.Add(new Title("Temps de calcul en fonction de nombre de pixels total"));
+            chart.ChartAreas.Add(new ChartArea("Temps de calcul en fonction de nombre de pixels total"));
 
 
             Series series = chart.Series.Add($"SEDT {AlgoType}");
@@ -1330,10 +1315,9 @@ namespace test_image2
             {
                 int[,] tabImage = TabFromFile(imagePath);
                 int[,] tabInit = InitResultat(tabImage);
-                int nombreTotalPixels = tabImage.GetLength(0) * tabImage.GetLength(1) / 10000;
 
                 Console.WriteLine($"Image: {imagePath}");
-                //int nombrePixelForme = GetFormPixels(tabInit);
+                int nombrePixelTotal = tabImage.GetLength(0) * tabImage.GetLength(1);
                 Stopwatch stopwatchOptimise = new Stopwatch();
                 stopwatchOptimise.Start();
                 int[,] resultatOptimise = Algortihm(tabInit);
@@ -1342,11 +1326,11 @@ namespace test_image2
 
                 Console.WriteLine($"Temps de calcul ({AlgoType}): {tempsOptimise} ms");
 
-                series.Points.AddXY(nombreTotalPixels, tempsOptimise);
+                series.Points.AddXY($"{nombrePixelTotal}", tempsOptimise);
                 index++;
             }
 
-            chart.ChartAreas[0].AxisX.Title = "Nombre de pixels de la forme";
+            chart.ChartAreas[0].AxisX.Title = "Nombre de pixels de l'image";
             chart.ChartAreas[0].AxisY.Title = "Temps de calcul (ms)";
 
             chart.Legends.Add(new Legend("Légende"));
@@ -1357,9 +1341,15 @@ namespace test_image2
             chartControl.Dock = DockStyle.Fill;
             form.Controls.Add(chartControl);
             //form.ShowDialog();
-            string pathToSave = $"../../images/GraphFormeSEDT{AlgoType}.png";
+            string pathToSave = $"../../images/CARTE_DISTANCE_GRAPHS/GraphSEDTTotal{AlgoType}.png";
             chart.SaveImage(pathToSave, ChartImageFormat.Png);
         }
+
+        /// <summary>
+        /// Mesure le temps de calcul des boules maximales en fonction du bruit.
+        /// </summary>
+        /// <param name="Algortihm">L'algorithme utilisé pour le calcul de la carte de distance.</param>
+        /// <param name="AlgoType">Le type d'algorithme utilisé, pour l'inclusion dans le graphique.</param>
         public static void WatchBouleMaxNoisePerformance(Func<int[,], List<Boule>> Algortihm, string AlgoType)
         {
             string[] imagePaths = {
@@ -1369,7 +1359,7 @@ namespace test_image2
                 "../../images/imagesTheoriques/img1/image3.bmp",
                 "../../images/imagesTheoriques/img1/image4.bmp"
             };
-            for (int j = 2; j < 4; j++)
+            for (int j = 2; j < 3; j++)
             {
                 Chart chart = new Chart();
                 chart.Titles.Add(new Title("Temps de calcul en fonction de bruit"));
@@ -1413,7 +1403,7 @@ namespace test_image2
                 chartControl.Dock = DockStyle.Fill;
                 form.Controls.Add(chartControl);
                 //form.ShowDialog();
-                string pathToSave = $"../../images/GraphBruitBouleMax{j}.png";
+                string pathToSave = $"../../images/BOULES_MAX_GRAPHS/GraphBruitBouleMax{AlgoType}{j}.png";
                 chart.SaveImage(pathToSave, ChartImageFormat.Png);
                 for (int i = 0; i < 5; i++)
                 {
@@ -1421,19 +1411,24 @@ namespace test_image2
                 }
             }
         }
-        public static void WatchBouleMaxFormePixelPerformance(Func<int[,], List<Boule>> Algortihm, string AlgoType)
+        /// <summary>
+        /// Mesure le temps de calcul des boules maximales en fonction de nombre des pixels de la formes..
+        /// </summary>
+        /// <param name="Algortihm">L'algorithme utilisé pour le calcul de la carte de distance.</param>
+        /// <param name="AlgoType">Le type d'algorithme utilisé, pour l'inclusion dans le graphique.</param>
+        public static void WatchBouleMaxTotalPixelPerformance(Func<int[,], List<Boule>> Algortihm, string AlgoType)
         {
-            List<string> images = new List<string> ();
-            for (int i = 1; i < 8; i++)
+            List<string> images = new List<string>();
+            for (int i = 0; i < 9; i++)
             {
-                string x = "../../images/imagesTheoriques/img1/image0.bmp";
-                x = x.Replace("img1", $"img{i}");
+                string x = "../../images/imagesReelles/Compare/";
+                x += i + ".bmp";
                 images.Add(x);
             }
-            var imagePaths = images.OrderBy(TrieCheminImagePixelFond);
+            var imagePaths = images.OrderBy(TrieCheminImagePixelTotal);
             Chart chart = new Chart();
-            chart.Titles.Add(new Title("Temps de calcul en fonction de nombre de pixel de la forme"));
-            chart.ChartAreas.Add(new ChartArea("Temps de calcul en fonction de nombre de pixel de la forme"));
+            chart.Titles.Add(new Title("Temps de calcul en fonction de nombre de pixel total"));
+            chart.ChartAreas.Add(new ChartArea("Temps de calcul en fonction de nombre de pixel total"));
 
 
             Series series = chart.Series.Add($"Boules Max {AlgoType}");
@@ -1448,7 +1443,7 @@ namespace test_image2
                 int[,] tabInit = InitResultat(tabImage);
                 
                 Console.WriteLine($"Image: {imagePath}");
-                int nombrePixelForme = GetFormPixels(tabInit);
+                int nombrePixelForme = tabImage.GetLength(0) * tabImage.GetLength(1);
                 Stopwatch stopwatchOptimise = new Stopwatch();
                 int[,] resultatOptimise = CarteOptimise(tabInit);
                 stopwatchOptimise.Start();
@@ -1462,7 +1457,7 @@ namespace test_image2
                 index++;
             }
 
-            chart.ChartAreas[0].AxisX.Title = "Nombre de pixels de la forme";
+            chart.ChartAreas[0].AxisX.Title = "Nombre de pixels de l'image";
             chart.ChartAreas[0].AxisY.Title = "Temps de calcul (ms)";
 
             chart.Legends.Add(new Legend("Légende"));
@@ -1473,9 +1468,124 @@ namespace test_image2
             chartControl.Dock = DockStyle.Fill;
             form.Controls.Add(chartControl);
             //form.ShowDialog();
-            string pathToSave = $"../../images/GraphFormeBouleMax{AlgoType}.png";
+            string pathToSave = $"../../images/BOULES_MAX_GRAPHS/GraphTotalBouleMax{AlgoType}.png";
             chart.SaveImage(pathToSave, ChartImageFormat.Png);            
         }
 
+        /// <summary>
+        /// Mesure le temps de calcul de la reconstruction en fonction de nombre des pixels de la formes.
+        /// </summary>
+        public static void WatchReconstructionFormePixelPerformance()
+        {
+            List<string> images = new List<string>();
+            for (int i = 0; i < 7; i++)
+            {
+                string x = "../../images/BOULES_MAX_RESULTATS_OPTIMISE/";
+                x += i + ".bmp";
+                images.Add(x);
+            }
+            var imagePaths = images.OrderBy(TrieCheminImagePixelForme);
+
+            
+            Chart chart = new Chart();
+            chart.Titles.Add(new Title("Temps de calcul en fonction de nombre de pixel de la forme"));
+            chart.ChartAreas.Add(new ChartArea("Temps de calcul en fonction de nombre de la forme"));
+
+
+            Series series = chart.Series.Add($"Reconstruction");
+            series.ChartType = SeriesChartType.Line;
+            int index = 0;
+            chart.ChartAreas[0].AxisX.IsMarginVisible = false;
+
+
+            foreach (string imagePath in imagePaths)
+            {
+                int[,] tabImage = TabFromFile(imagePath);
+                int[,] tabInit = InitResultat(tabImage);
+                int nombrePixelForme = GetFormPixels(tabInit);
+                string textFile = imagePath.Replace(".bmp", ".txt");
+                Console.WriteLine(textFile);
+                Stopwatch stopwatchOptimise = new Stopwatch();
+                stopwatchOptimise.Start();
+                Reconstruction(textFile);
+                stopwatchOptimise.Stop();
+                long tempsOptimise = stopwatchOptimise.ElapsedMilliseconds;
+
+                Console.WriteLine($"Temps de calcul : {tempsOptimise} ms");
+
+                series.Points.AddXY(nombrePixelForme, tempsOptimise);
+                index++;
+            }
+
+            chart.ChartAreas[0].AxisX.Title = "Nombre de pixels de l'image";
+            chart.ChartAreas[0].AxisY.Title = "Temps de calcul (ms)";
+
+            chart.Legends.Add(new Legend("Légende"));
+            chart.Legends["Légende"].Docking = Docking.Bottom;
+
+            Form form = new Form();
+            ChartControl chartControl = new ChartControl(chart);
+            chartControl.Dock = DockStyle.Fill;
+            form.Controls.Add(chartControl);
+            //form.ShowDialog();
+            string pathToSave = $"../../images/RECONSTRUCTIONGRAPHS/GraphRECONSTRUCTIONFORME.png";
+            chart.SaveImage(pathToSave, ChartImageFormat.Png);
+        }
+        /// <summary>
+        /// Mesure le temps de calcul de la reconstruction en fonction de nombre de bruit.
+        /// </summary>
+        public static void WatchReconstructionBruitPerformance()
+        {
+            List<string> images = new List<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                string x = "../../images/BOULES_MAX_RESULTATS_OPTIMISE/img1/image";
+                x += i + ".bmp";
+                images.Add(x);
+            }
+
+
+            Chart chart = new Chart();
+            chart.Titles.Add(new Title("Temps de calcul en fonction de bruit"));
+            chart.ChartAreas.Add(new ChartArea("Temps de calcul en fonction de bruit"));
+
+
+            Series series = chart.Series.Add($"Reconstruction");
+            series.ChartType = SeriesChartType.Line;
+            int index = 0;
+            chart.ChartAreas[0].AxisX.IsMarginVisible = false;
+
+            foreach (string imagePath in images)
+            {
+                int[,] tabImage = TabFromFile(imagePath);
+                int[,] tabInit = InitResultat(tabImage);
+                string textFile = imagePath.Replace(".bmp", ".txt");
+                Console.WriteLine(textFile);
+                Stopwatch stopwatchOptimise = new Stopwatch();
+                stopwatchOptimise.Start();
+                Reconstruction(textFile);
+                stopwatchOptimise.Stop();
+                long tempsOptimise = stopwatchOptimise.ElapsedMilliseconds;
+
+                Console.WriteLine($"Temps de calcul : {tempsOptimise} ms");
+
+                series.Points.AddXY(index, tempsOptimise);
+                index++;
+            }
+
+            chart.ChartAreas[0].AxisX.Title = "Intensite de bruit";
+            chart.ChartAreas[0].AxisY.Title = "Temps de calcul (ms)";
+
+            chart.Legends.Add(new Legend("Légende"));
+            chart.Legends["Légende"].Docking = Docking.Bottom;
+
+            Form form = new Form();
+            ChartControl chartControl = new ChartControl(chart);
+            chartControl.Dock = DockStyle.Fill;
+            form.Controls.Add(chartControl);
+            //form.ShowDialog();
+            string pathToSave = $"../../images/RECONSTRUCTIONGRAPHS/GraphRECONSTRUCTIONBruit.png";
+            chart.SaveImage(pathToSave, ChartImageFormat.Png);
+        }
     }
 }
