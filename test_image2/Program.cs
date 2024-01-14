@@ -63,10 +63,10 @@ namespace test_image2
     {
         static void Main(string[] args)
         {
-            /*
+            
             string Path = $"../../images/imagesReelles/";
-            string BallPath = $"../../images/BOULES_MAX_RESULTATS_OPTIMISE/";
-            string CartePath = $"../../images/CARTE_EUCLIDIENNE_RESULTATS_OPTIMISE/";
+            string BallPath = $"../../images/VISUALISATION/";
+            string CartePath = $"../../images/VISUALISATION/CARTE_EUCLIDIENNE_RESULTATS_OPTIMISE/";
             for (int i = 0; i < 20; i++) 
             {
                 string imagePath =$"{Path}{i}.bmp";
@@ -78,12 +78,9 @@ namespace test_image2
                 int width = tabImage.GetLength(0);
                 int height = tabImage.GetLength(1);
                 BoulesMaxToFile(BoulesMax, width, height, $"{BallPath}{i}.bmp");
-                SaveSquelette(tabImage, BoulesMax, $"{BallPath}{i}.bmp");
-
-
-
+                SaveSquelette(tabImage, BoulesMax, $"{BallPath}{i}Colored.bmp");
             }
-            */
+            
 
             /********************CARTE DISTANCE ***************************/
             /************************* METHODE OPTIMISEE *************************/
@@ -244,9 +241,6 @@ namespace test_image2
        *********************************************************************************************
        ********************************************************************************************/
 
-        
-        
-
         /// <summary>
         /// Extraire les boules maximales à partir d'un tableau 2D représentant une carte distance.
         /// </summary>
@@ -314,8 +308,7 @@ namespace test_image2
         /// <param name="Xpath">Le chemin du fichier de sortie.</param>
         public static void BoulesMaxToFile(List<Boule> Xboules, int Xwidth, int Xheight, string Xpath)
         {
-            string path = Xpath.Substring(0, Xpath.Length - 3);
-            path += "txt";
+            string path = Xpath.Replace(".bmp",".txt");
             string resultat = "";
             resultat += $"{Xwidth}, {Xheight}\n";
             foreach (Boule boule in Xboules)
@@ -348,7 +341,6 @@ namespace test_image2
         string[] dimensions = lines[0].Split(',');
         int width = int.Parse(dimensions[0].Trim());
         int height = int.Parse(dimensions[1].Trim());
-        Console.WriteLine($"{width},{height}");
         Bitmap bitmap = new Bitmap(width, height);
         int[,] tab = new int[width, height];
         List<Boule> BoulesMax = new List<Boule>();
@@ -365,8 +357,9 @@ namespace test_image2
             Boule boule = new Boule(x, y, rayon);
             BoulesMax.Add(boule);
         }
+        string destination = TextPath.Replace(".txt", ".bmp");
         //AfficheBouleImage(tab, BoulesMax);
-        SaveBouleImage(tab, BoulesMax, "../../images/ime.bmp");
+        SaveBouleImage(tab, BoulesMax, destination);
     }
 
         /********************************************************************************************
@@ -375,73 +368,10 @@ namespace test_image2
         *********************************************************************************************
         *********************************************************************************************
         ********************************************************************************************/
-        static bool CompareListesBoules(List<Boule> liste1, List<Boule> liste2)
-        {
-            // Si elles n'ont pas la meme longueur c'est qu'elles sont différentes
-            if (liste1.Count != liste2.Count)
-            {
-                Console.WriteLine("nb boule dans l'optimisé: " + liste1.Count);
-                Console.WriteLine("nb boule dans la brute force: " + liste2.Count);
-                return false;
-            }
-
-            // On vérifie chaque boule dans les deux listes
-            for (int i = 0; i < liste1.Count; i++)
-            {
-                // On compare les Rayon de deux boules
-                if (liste1[i].Rayon != liste2[i].Rayon)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        static double ComparerImagesPourcentage(string cheminImageOriginale, string cheminImageReconstruite)
-        {
-            Bitmap imageOriginale = null;
-            Bitmap imageReconstruite = null;
-
-            // On fait une vérification pour voir si les chemins fournis sont bons
-            try
-            {
-                imageOriginale = new Bitmap(cheminImageOriginale);
-                imageReconstruite = new Bitmap(cheminImageReconstruite);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erreur lors du chargement des images : {ex.Message}");
-                return 0.0; // Ou une valeur appropriée en cas d'échec du chargement des images
-            }
-
-            // On vérifie les dimensions des images et redimensionner si nécessaire
-            if (imageOriginale.Width != imageReconstruite.Width || imageOriginale.Height != imageReconstruite.Height)
-            {
-                imageReconstruite = new Bitmap(imageReconstruite, imageOriginale.Size);
-            }
-
-            int pixelsIdentiques = 0;
-            int totalPixels = imageOriginale.Width * imageOriginale.Height;
-
-            //On compare chaque pixel des deux images
-            for (int x = 0; x < imageOriginale.Width; x++)
-            {
-                for (int y = 0; y < imageOriginale.Height; y++)
-                {
-                    if (imageOriginale.GetPixel(x, y) == imageReconstruite.GetPixel(x, y))
-                    {
-                        pixelsIdentiques++;
-                    }
-                }
-            }
-
-            Console.WriteLine("Boucle de comparaison terminée");
-
-            // On calcule le pourcentage de reconstruction
-            double pourcentageReconstruction = (double)pixelsIdentiques / totalPixels * 100;
-            Console.WriteLine($"Pourcentage de reconstruction : {pourcentageReconstruction}%");
-            return pourcentageReconstruction;
-        }
+        /// <summary>
+        /// Renvoie le nombre des pixels de la forme dans une image
+        /// </summary>
+        /// <param name="Xtab">le chemin de l'image</param>
         public static int GetFormPixels(int[,] XTab)
         {
             int hauteur = XTab.GetLength(0);
@@ -457,7 +387,6 @@ namespace test_image2
             }
             return nbPixelForme;
         }
-
 
         /// <summary>
         /// Trie les images en fonction de leurs nombre de pixel de la forme.
@@ -481,55 +410,6 @@ namespace test_image2
             int nombreTotalPixels = tabImage.GetLength(0) * tabImage.GetLength(1);
             return nombreTotalPixels;
         }
-
-        /// <summary>
-        /// Affiche un tableau 2D d'entiers dans la console.
-        /// </summary>
-        /// <param name="Xtab">Le tableau 2D d'entiers à afficher.</param>
-        public static void AfficheTableau2D(int[,] Xtab)
-        {
-            int nbLig = Xtab.GetLength(0);
-            int nbCol = Xtab.GetLength(1);
-            for (int row = 0; row < nbLig; row++)
-            {
-                Console.Write("[");
-                for (int col = 0; col < nbCol; col++)
-                {
-                    if (Xtab[row, col] >= 10)
-                    {
-                        Console.Write($"{Xtab[row, col]} ");
-                    }
-                    else
-                    {
-                        Console.Write($" {Xtab[row, col]} ");
-                    }
-                    if (col < nbCol - 1)
-                    {
-                        Console.Write("|");
-                    }
-                }
-                Console.Write("]");
-                if (row < nbLig - 1)
-                {
-                    Console.WriteLine();
-                }
-            }
-        }
-
-        ///<summary>
-        ///Affiche tous les boules maximales.
-        ///</summary>
-        ///<param name = "boules" > Liste des boules</param>
-        public static void AfficherBoules(List<Boule> boules)
-        {
-            foreach (var boule in boules)
-            {
-                Console.WriteLine("Boule Maximale:");
-                boule.AfficherInfo();
-                Console.WriteLine("--------------------");
-            }
-        }
-
         /// <summary>
         /// Recherche la valeur maximale dans un tableau 2D.
         /// </summary>
@@ -548,7 +428,7 @@ namespace test_image2
         }
 
         /// <summary>
-        /// Compare deux tableaux 2D d'entiers et compte le nombre de différences.
+        /// Compare deux tableaux 2D d'entiers et compte le nombre de différences. ( FAIT POUR COMPARER LA METHODE BRUTE FORCE ET L'OPTIMISE DE LA CARTE DE DISTANCE )
         /// </summary>
         /// <param name="Xtab1">Le premier tableau 2D d'entiers.</param>
         /// <param name="Xtab2">Le deuxième tableau 2D d'entiers à comparer.</param>
@@ -901,6 +781,167 @@ namespace test_image2
             }
             return true;
         }
+
+
+        /// <summary>
+        /// Compare deux listes de boules
+        /// </summary>
+        /// <param name="liste1">la 1ere liste des boules</param>
+        /// <param name="liste2">la 2eme liste des boules</param>
+        /// <returns>True si le nombre des boules est identique sinon False</returns>
+        static bool CompareListesBoules(List<Boule> liste1, List<Boule> liste2)
+        {
+            // Si elles n'ont pas la meme longueur c'est qu'elles sont différentes
+            if (liste1.Count != liste2.Count)
+            {
+                Console.WriteLine("nb boule dans l'optimisé: " + liste1.Count);
+                Console.WriteLine("nb boule dans la brute force: " + liste2.Count);
+                return false;
+            }
+
+            // On vérifie chaque boule dans les deux listes
+            for (int i = 0; i < liste1.Count; i++)
+            {
+                // On compare les Rayon de deux boules
+                if (liste1[i].Rayon != liste2[i].Rayon)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        /// <summary>
+        /// Compare deux images en terme de pixels et renvoie la différence
+        /// </summary>
+        /// <param name="cheminImageOriginale">le chemin de la premiére image </param>
+        /// <param name="cheminImageReconstruite">le chemin de la deuxiéme image</param>
+        /// <returns>Le pourcentage de différence entre les deux images</returns>
+
+        static double ComparerImagesPourcentage(string cheminImageOriginale, string cheminImageReconstruite)
+        {
+            Bitmap imageOriginale = null;
+            Bitmap imageReconstruite = null;
+
+            // On fait une vérification pour voir si les chemins fournis sont bons
+            try
+            {
+                imageOriginale = new Bitmap(cheminImageOriginale);
+                imageReconstruite = new Bitmap(cheminImageReconstruite);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur lors du chargement des images : {ex.Message}");
+                return 0.0; // Ou une valeur appropriée en cas d'échec du chargement des images
+            }
+
+            // On vérifie les dimensions des images et redimensionner si nécessaire
+            if (imageOriginale.Width != imageReconstruite.Width || imageOriginale.Height != imageReconstruite.Height)
+            {
+                imageReconstruite = new Bitmap(imageReconstruite, imageOriginale.Size);
+            }
+
+            int pixelsIdentiques = 0;
+            int totalPixels = imageOriginale.Width * imageOriginale.Height;
+
+            //On compare chaque pixel des deux images
+            for (int x = 0; x < imageOriginale.Width; x++)
+            {
+                for (int y = 0; y < imageOriginale.Height; y++)
+                {
+                    if (imageOriginale.GetPixel(x, y) == imageReconstruite.GetPixel(x, y))
+                    {
+                        pixelsIdentiques++;
+                    }
+                }
+            }
+
+            Console.WriteLine("Boucle de comparaison terminée");
+
+            // On calcule le pourcentage de reconstruction
+            double pourcentageReconstruction = (double)pixelsIdentiques / totalPixels * 100;
+            Console.WriteLine($"Pourcentage de reconstruction : {pourcentageReconstruction}%");
+            return pourcentageReconstruction;
+        }
+        /// <summary>
+        /// Calcule une couleur de dégradé en fonction de la colonne actuelle.
+        /// </summary>
+        /// <param name="col">La colonne actuelle.</param>
+        /// <param name="width">La largeur de l'image.</param>
+        /// <returns>La couleur calculée.</returns>
+        public static Color CalculateGradientColor(int col, int width)
+        {
+            Color color1 = Color.FromArgb(0x00DBDE);
+            Color color2 = Color.FromArgb(0x635EE2);
+            Color color3 = Color.FromArgb(0x9564D2);
+
+            float t = (float)col / (float)width;
+
+            Color interpolatedColor1 = InterpolateColors(color1, color2, t);
+            Color interpolatedColor2 = InterpolateColors(color2, color3, t);
+
+            return InterpolateColors(interpolatedColor1, interpolatedColor2, t);
+        }
+        /// <summary>
+        /// Interpole entre deux couleurs en fonction d'un facteur t.
+        /// </summary>
+        /// <param name="color1">La première couleur.</param>
+        /// <param name="color2">La deuxième couleur.</param>
+        /// <param name="t">Le facteur d'interpolation.</param>
+        /// <returns>La couleur interpolée.</returns>
+        public static Color InterpolateColors(Color color1, Color color2, float t)
+        {
+            int r = (int)(color1.R + t * (color2.R - color1.R));
+            int g = (int)(color1.G + t * (color2.G - color1.G));
+            int b = (int)(color1.B + t * (color2.B - color1.B));
+
+            return Color.FromArgb(r, g, b);
+        }
+
+        /// <summary>
+        /// Mélange deux couleurs.
+        /// </summary>
+        /// <param name="baseColor">La couleur de base.</param>
+        /// <param name="blendColor">La couleur à mélanger.</param>
+        /// <returns>La couleur résultante.</returns>
+        public static Color BlendColors(Color baseColor, Color blendColor)
+        {
+            int alpha = blendColor.A;
+            int invAlpha = 255 - alpha;
+            int r = (baseColor.R * invAlpha + blendColor.R * alpha) / 255;
+            int g = (baseColor.G * invAlpha + blendColor.G * alpha) / 255;
+            int b = (baseColor.B * invAlpha + blendColor.B * alpha) / 255;
+            return Color.FromArgb(255, r, g, b);
+        }
+
+        /// <summary>
+        /// Dessine un cercle sur le graphique g aux coordonnées spécifiées.
+        /// </summary>
+        /// <param name="g">Le graphique sur lequel dessiner.</param>
+        /// <param name="centerX">La coordonnée X du centre du cercle.</param>
+        /// <param name="centerY">La coordonnée Y du centre du cercle.</param>
+        /// <param name="radius">Le rayon du cercle.</param>
+        /// <param name="color">La couleur du cercle.</param>
+        public static void DrawCircle(Graphics g, int centerX, int centerY, int radius, Color color)
+        {
+            using (Pen pen = new Pen(color))
+            {
+                g.DrawEllipse(pen, centerX - radius, centerY - radius, 2 * radius, 2 * radius);
+            }
+        }
+        /// <summary>
+        /// Génére un couleur aléatoire
+        /// </summary>
+        /// <returns>une couleur</returns>
+        public static Color generateRandomColor()
+        {
+            int red = random.Next(256);
+            int green = random.Next(256);
+            int blue = random.Next(256);
+
+            // Create and return a Color object
+            return Color.FromArgb(red, green, blue);
+        }
+
         /********************************************************************************************
         *********************************************************************************************
         ********************************     AFFICHAGE D'IMAGE     **********************************
@@ -1002,7 +1043,7 @@ namespace test_image2
 
         /********************************************************************************************
         *********************************************************************************************
-        *****************************     AFFICHAGE DU SQUELLETTE     *******************************
+        *****************************     AFFICHAGE DES BOULES     *******************************
         *********************************************************************************************
         *********************************************************************************************
         ********************************************************************************************/
@@ -1026,104 +1067,19 @@ namespace test_image2
                 {
 
                     int rayon = (int)Math.Round(Math.Sqrt(boule.Rayon));
-                    SolidBrush blackBrush = new SolidBrush(Color.Black);
-                    g.FillEllipse(blackBrush, boule.Y - rayon, boule.X - rayon, 2 * rayon, 2 * rayon);
-                    blackBrush.Dispose();
-                    Color circleGradientColor = CalculateGradientColor(boule.X, largeur);
-                    DrawCircle(g, boule.Y, boule.X, rayon, circleGradientColor);
+                    Color color = generateRandomColor();
+                    //SolidBrush blackBrush = new SolidBrush(Color.Black);
+                    //g.FillEllipse(blackBrush, boule.Y - rayon, boule.X - rayon, 2 * rayon, 2 * rayon);
+                    //blackBrush.Dispose();
+                    //Color circleGradientColor = CalculateGradientColor(boule.X, largeur);
+                    DrawCircle(g, boule.Y, boule.X, rayon, color);
 
                     
                 }
             }
         }
-        /// <summary>
-        /// Reconstruit une image à partir des boules maximales
-        /// </summary>
-        /// <param name="Xtab">Le tableau 2D stockant les valeurs des pixels de l'image Ximg.</param>
-        /// <param name="Ximg">L'image Bitmap résultante</param>
-        public static void BouleToImage(int[,] Xtab, List<Boule> XboulesMax, Bitmap Ximg)
-        {
-            int hauteur = Xtab.GetLength(0);
-            int largeur = Xtab.GetLength(1);
-            using (Graphics g = Graphics.FromImage(Ximg))
-            {
-                g.DrawImage(Ximg, 0, 0);
-
-                foreach (Boule boule in XboulesMax)
-                {
-                    int rayon = (int)Math.Round(Math.Sqrt(boule.Rayon));
-                    SolidBrush blackBrush = new SolidBrush(Color.Black);
-                    g.FillEllipse(blackBrush, boule.Y - rayon, boule.X - rayon, 2 * rayon, 2 * rayon);
-                    blackBrush.Dispose();
-                }
-            }
-        }
-        /// <summary>
-        /// Calcule une couleur de dégradé en fonction de la colonne actuelle.
-        /// </summary>
-        /// <param name="col">La colonne actuelle.</param>
-        /// <param name="width">La largeur de l'image.</param>
-        /// <returns>La couleur calculée.</returns>
-        public static Color CalculateGradientColor(int col, int width)
-        {
-            Color color1 = Color.FromArgb(0x00DBDE);
-            Color color2 = Color.FromArgb(0x635EE2);
-            Color color3 = Color.FromArgb(0x9564D2);
-
-            float t = (float)col / (float)width;
-
-            Color interpolatedColor1 = InterpolateColors(color1, color2, t);
-            Color interpolatedColor2 = InterpolateColors(color2, color3, t);
-
-            return InterpolateColors(interpolatedColor1, interpolatedColor2, t);
-        }
-        /// <summary>
-        /// Interpole entre deux couleurs en fonction d'un facteur t.
-        /// </summary>
-        /// <param name="color1">La première couleur.</param>
-        /// <param name="color2">La deuxième couleur.</param>
-        /// <param name="t">Le facteur d'interpolation.</param>
-        /// <returns>La couleur interpolée.</returns>
-        public static Color InterpolateColors(Color color1, Color color2, float t)
-        {
-            int r = (int)(color1.R + t * (color2.R - color1.R));
-            int g = (int)(color1.G + t * (color2.G - color1.G));
-            int b = (int)(color1.B + t * (color2.B - color1.B));
-
-            return Color.FromArgb(r, g, b);
-        }
-
-        /// <summary>
-        /// Mélange deux couleurs.
-        /// </summary>
-        /// <param name="baseColor">La couleur de base.</param>
-        /// <param name="blendColor">La couleur à mélanger.</param>
-        /// <returns>La couleur résultante.</returns>
-        public static Color BlendColors(Color baseColor, Color blendColor)
-        {
-            int alpha = blendColor.A;
-            int invAlpha = 255 - alpha;
-            int r = (baseColor.R * invAlpha + blendColor.R * alpha) / 255;
-            int g = (baseColor.G * invAlpha + blendColor.G * alpha) / 255;
-            int b = (baseColor.B * invAlpha + blendColor.B * alpha) / 255;
-            return Color.FromArgb(255, r, g, b);
-        }
-
-        /// <summary>
-        /// Dessine un cercle sur le graphique g aux coordonnées spécifiées.
-        /// </summary>
-        /// <param name="g">Le graphique sur lequel dessiner.</param>
-        /// <param name="centerX">La coordonnée X du centre du cercle.</param>
-        /// <param name="centerY">La coordonnée Y du centre du cercle.</param>
-        /// <param name="radius">Le rayon du cercle.</param>
-        /// <param name="color">La couleur du cercle.</param>
-        public static void DrawCircle(Graphics g, int centerX, int centerY, int radius, Color color)
-        {
-            using (Pen pen = new Pen(color))
-            {
-                g.DrawEllipse(pen, centerX - radius, centerY - radius, 2 * radius, 2 * radius);
-            }
-        }
+        static Random random = new Random();
+        
 
         /// <summary>
         /// Remplit l'image avec le squelette avec des points à partir de Xtab.
@@ -1189,6 +1145,37 @@ namespace test_image2
             f.Show();
         }
 
+        
+
+        /********************************************************************************************
+        *********************************************************************************************
+        *****************************   AFFICHAGE IMAGE RECONSTRUITE   ******************************
+        *********************************************************************************************
+        *********************************************************************************************
+        ********************************************************************************************/
+        /// <summary>
+        /// Reconstruit une image à partir des boules maximales
+        /// </summary>
+        /// <param name="Xtab">Le tableau 2D stockant les valeurs des pixels de l'image Ximg.</param>
+        /// <param name="Ximg">L'image Bitmap résultante</param>
+        public static void BouleToImage(int[,] Xtab, List<Boule> XboulesMax, Bitmap Ximg)
+        {
+            int hauteur = Xtab.GetLength(0);
+            int largeur = Xtab.GetLength(1);
+            using (Graphics g = Graphics.FromImage(Ximg))
+            {
+                g.DrawImage(Ximg, 0, 0);
+
+                foreach (Boule boule in XboulesMax)
+                {
+                    int rayon = (int)Math.Round(Math.Sqrt(boule.Rayon));
+                    SolidBrush blackBrush = new SolidBrush(Color.Black);
+                    g.FillEllipse(blackBrush, boule.Y - rayon, boule.X - rayon, 2 * rayon, 2 * rayon);
+                    blackBrush.Dispose();
+                }
+            }
+        }
+
         /// <summary>
         /// Sauvegarde l'image dont la valeur des pixels est stockée dans Xtab, au chemin spécifié par Xfile.
         /// </summary>
@@ -1216,7 +1203,6 @@ namespace test_image2
             f.Height = img.Height;
             f.Show();
         }
-
         /********************************************************************************************
         *********************************************************************************************
         *****************************   COMPARAISON DES ALGORITHMES    ******************************
@@ -1276,7 +1262,7 @@ namespace test_image2
                 ChartControl chartControl = new ChartControl(chart);
                 chartControl.Dock = DockStyle.Fill;
                 form.Controls.Add(chartControl);
-                string pathToSave = $"../../images/CARTE_DISTANCE_GRAPHS/GraphBruitSEDT{AlgoType}.png";
+                string pathToSave = $"../../images/GRAPHES/CARTE_DISTANCE_GRAPHS/GraphBruitSEDT{AlgoType}.png";
                 chart.SaveImage(pathToSave, ChartImageFormat.Png);
            
         }
@@ -1341,7 +1327,7 @@ namespace test_image2
             chartControl.Dock = DockStyle.Fill;
             form.Controls.Add(chartControl);
             //form.ShowDialog();
-            string pathToSave = $"../../images/CARTE_DISTANCE_GRAPHS/GraphSEDTTotal{AlgoType}.png";
+            string pathToSave = $"../../images/GRAPHES/CARTE_DISTANCE_GRAPHS/GraphSEDTTotal{AlgoType}.png";
             chart.SaveImage(pathToSave, ChartImageFormat.Png);
         }
 
@@ -1403,7 +1389,7 @@ namespace test_image2
                 chartControl.Dock = DockStyle.Fill;
                 form.Controls.Add(chartControl);
                 //form.ShowDialog();
-                string pathToSave = $"../../images/BOULES_MAX_GRAPHS/GraphBruitBouleMax{AlgoType}{j}.png";
+                string pathToSave = $"../../images/GRAPHES/BOULES_MAX_GRAPHS/GraphBruitBouleMax{AlgoType}{j}.png";
                 chart.SaveImage(pathToSave, ChartImageFormat.Png);
                 for (int i = 0; i < 5; i++)
                 {
@@ -1416,7 +1402,7 @@ namespace test_image2
         /// </summary>
         /// <param name="Algortihm">L'algorithme utilisé pour le calcul de la carte de distance.</param>
         /// <param name="AlgoType">Le type d'algorithme utilisé, pour l'inclusion dans le graphique.</param>
-        public static void WatchBouleMaxTotalPixelPerformance(Func<int[,], List<Boule>> Algortihm, string AlgoType)
+        public static void WatchBouleMaxFormePixelPerformance(Func<int[,], List<Boule>> Algortihm, string AlgoType)
         {
             List<string> images = new List<string>();
             for (int i = 0; i < 9; i++)
@@ -1468,7 +1454,7 @@ namespace test_image2
             chartControl.Dock = DockStyle.Fill;
             form.Controls.Add(chartControl);
             //form.ShowDialog();
-            string pathToSave = $"../../images/BOULES_MAX_GRAPHS/GraphTotalBouleMax{AlgoType}.png";
+            string pathToSave = $"../../images/GRAPHES/BOULES_MAX_GRAPHS/GraphTotalBouleMax{AlgoType}.png";
             chart.SaveImage(pathToSave, ChartImageFormat.Png);            
         }
 
@@ -1480,7 +1466,7 @@ namespace test_image2
             List<string> images = new List<string>();
             for (int i = 0; i < 7; i++)
             {
-                string x = "../../images/BOULES_MAX_RESULTATS_OPTIMISE/";
+                string x = "../../images/VISUALISATION/BOULES_MAX_RESULTATS_OPTIMISE/";
                 x += i + ".bmp";
                 images.Add(x);
             }
@@ -1528,7 +1514,7 @@ namespace test_image2
             chartControl.Dock = DockStyle.Fill;
             form.Controls.Add(chartControl);
             //form.ShowDialog();
-            string pathToSave = $"../../images/RECONSTRUCTIONGRAPHS/GraphRECONSTRUCTIONFORME.png";
+            string pathToSave = $"../../images/GRAPHES/RECONSTRUCTIONGRAPHS/GraphRECONSTRUCTIONFORME.png";
             chart.SaveImage(pathToSave, ChartImageFormat.Png);
         }
         /// <summary>
@@ -1539,7 +1525,7 @@ namespace test_image2
             List<string> images = new List<string>();
             for (int i = 0; i < 5; i++)
             {
-                string x = "../../images/BOULES_MAX_RESULTATS_OPTIMISE/img1/image";
+                string x = "../../images/VISUALISATION/BOULES_MAX_RESULTATS_OPTIMISE/img1/image";
                 x += i + ".bmp";
                 images.Add(x);
             }
@@ -1584,7 +1570,7 @@ namespace test_image2
             chartControl.Dock = DockStyle.Fill;
             form.Controls.Add(chartControl);
             //form.ShowDialog();
-            string pathToSave = $"../../images/RECONSTRUCTIONGRAPHS/GraphRECONSTRUCTIONBruit.png";
+            string pathToSave = $"../../images/GRAPHES/RECONSTRUCTIONGRAPHS/GraphRECONSTRUCTIONBruit.png";
             chart.SaveImage(pathToSave, ChartImageFormat.Png);
         }
     }
